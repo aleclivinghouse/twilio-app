@@ -112,17 +112,22 @@ return Array.from(participant.tracks.values()).filter(function(publication) {
 
     room.participants.forEach(participant => {
       console.log("Already in Room '" + participant.identity + "'");
-      let previewContainer = this.ref.remoteMedia;
+      let previewContainer = this.refs.remoteMedia;
       this.attachParticipantTracks(participant, previewContainer);
     });
 
     room.on('participantConnected', participant => {
       console.log("Joining: '" + participant.identity + "'");
+      let tracks = this.getTracks(participant);
+      console.log('these are the tracks we wanted ', tracks);
+      this.attachTracks(tracks, previewContainer);
     });
 
-    room.on('trackAdded', (track, participant) => {
+    room.on('trackSubscribed', (track, participant) => {
+      console.log('tracked added firing');
       console.log(participant.identity + ' added track: ' + track.kind);
       var previewContainer = this.refs.remoteMedia;
+      console.log('this is the track for the econd user', track);
       this.attachTracks([track], previewContainer);
     });
 
@@ -167,7 +172,7 @@ return Array.from(participant.tracks.values()).filter(function(publication) {
        /><br />
       {joinOrLeaveRoomButton}
        </div>
-      <div className="flex-item" ref="remoteMedia" id="remote-media" />
+      <div ref="remoteMedia" id="remote-media" />
     </div>
     );
  }

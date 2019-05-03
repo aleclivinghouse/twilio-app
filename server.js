@@ -17,7 +17,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 app.get('/token', function(request, response) {
-   var identity = 'name';
+  let r = Math.random().toString(36).substring(7);
+   var identity = r;
 
    // Create an access token which we will sign and return to the client,
    // containing the grant we just created
@@ -74,7 +75,10 @@ app.use(function (req, res, next) {
   }
   next();
 });
-
+app.use(express.static('client/build'))
+  app.get('*', (req, res)=>{
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
